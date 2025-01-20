@@ -6,6 +6,7 @@
     <title>Chess Game</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
 </head>
 <body>
 
@@ -21,7 +22,7 @@
         </div>
     {% else %}
         <!-- Show chessboard and the rest of the game -->
-        <div class="board">
+        <div class="board" id="board">
             {{ board_str | safe }}
         </div>
         <div class="move-form">
@@ -41,6 +42,8 @@
 </div>
 
 <script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
     $(document).ready(function(){
         // Handle setting the name and displaying the color
         $('#name-form').on('submit', function(event) {
@@ -61,14 +64,18 @@
         $('#move-form').on('submit', function(event) {
             event.preventDefault();
             var move = $('#move').val();
-            $.ajax({
-                url: '/move',
-                type: 'POST',
-                data: { move: move },
-                success: function(response) {
-                    $('body').html(response);  // Replace the entire body with the updated content
-                }
-            });
+            socket.emit('move', move);  // Emit the move to the server via WebSocket
+        });
+
+        // Listen for board updates from the server
+        socket.on('update_board', function(data) {
+            $('.board').html(data.board_str);
+            if (data.error_message) {
+                $('.error-message').html(data.error_message);
+            } else {
+                $('.error-message').html('');
+            }
+            $('p:contains("turn")').text("It's " + data.turn + "'s turn.");
         });
     });
 </script>
