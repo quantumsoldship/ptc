@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+</head>
+<body>
+
+<div class="board-container">
+    {% if players['White'] is none or players['Black'] is none %}
+        <div class="name-form">
+            <h3>Enter your name to start the game:</h3>
+            <form id="name-form" method="POST" action="/set_name">
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                <button type="submit">Submit</button>
+            </form>
+            <div id="name-message"></div>
+        </div>
+    {% else %}
+        <!-- Show chessboard and the rest of the game -->
+        <div class="board">
+            {{ board_str | safe }}
+        </div>
+        <div class="move-form">
+            {% if error_message %}
+                <div class="error-message" style="color: red;">{{ error_message }}</div>
+            {% endif %}
+            <form id="move-form">
+                <label for="move">Enter your move (e.g., e2e4): </label>
+                <input type="text" id="move" name="move" required>
+                <button type="submit">Submit</button>
+            </form>
+            <p>It's {{ turn }}'s turn.</p>
+            <p>White: {{ players['White'] }}</p>
+            <p>Black: {{ players['Black'] }}</p>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    $(document).ready(function(){
+        // Handle setting the name and displaying the color
+        $('#name-form').on('submit', function(event) {
+            event.preventDefault();
+            var name = $('#name').val();
+            $.ajax({
+                url: '/set_name',
+                type: 'POST',
+                data: { name: name },
+                success: function(response) {
+                    $('#name-message').html(`<p>You are playing as ${response.color}</p>`);
+                    $('#name-form').hide();  // Hide the name form after submission
+                }
+            });
+        });
+
+        // Handle chess move form submission
+        $('#move-form').on('submit', function(event) {
+            event.preventDefault();
+            var move = $('#move').val();
+            $.ajax({
+                url: '/move',
+                type: 'POST',
+                data: { move: move },
+                success: function(response) {
+                    $('body').html(response);  // Replace the entire body with the updated content
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

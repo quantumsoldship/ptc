@@ -1,0 +1,65 @@
+@font-face {
+    font-family: "regular";
+    src: url("fonts/regular") format("woff2");
+}
+
+@font-face {
+    font-family: "outline";
+    src: url("fonts/outlined") format("woff2");
+}
+
+body {
+    font-family: "Custom Chess Font", monospace;
+    text-align: center;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+}
+
+.board-container {
+    text-align: center;
+}
+
+.board {
+    font-family: "Custom Chess Font", monospace;
+    white-space: pre-line; /* Keep formatting from Python */
+    text-align: center; /* Center-align the text within the container */
+    margin: 0 auto; /* Center the board horizontally */
+    display: inline-block; /* Ensure the board is not treated as a block element */
+    line-height: 1.5em; /* Adjust line spacing for readability */
+    padding: 10px; /* Add padding around the board for clarity */
+    background-color: #f4f4f9; /* Optional: Light background for contrast */
+}
+
+.white-piece {
+    font-family: "regular", sans-serif;
+    color: black; /* You can change the color as needed */
+}
+
+/* Style for black pieces using the "outline" font */
+.black-piece {
+    font-family: "outline", sans-serif;
+    color: #333; /* You can adjust the color as needed */
+}
+
+.empty-square {
+    color: #bbb; /* Light gray for empty squares */
+}
+
+.move-form {
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    font-size: 16px;
+    padding: 5px;
+}
+
+button {
+    font-size: 16px;
+    padding: 5px 10px;
+    cursor: pointer;
+}

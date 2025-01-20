@@ -1,0 +1,77 @@
+/* Define the fonts */
+@font-face {
+    font-family: "chess-regular";
+    src: url("/static/fonts/regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "chess-outline";
+    src: url("/static/fonts/outlined.woff2") format("woff2");
+}
+
+body {
+    font-family: "regular", monospace;
+    text-align: center;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #EFEFEF;
+}
+
+.board-container {
+    text-align: center;
+}
+
+.board {
+    white-space: pre-line; /* Keep formatting from Python */
+    text-align: center; /* Center-align the text within the container */
+    margin: 0 auto; /* Center the board horizontally */
+    display: inline-block; /* Ensure the board is not treated as a block element */
+    line-height: 1.5em; /* Adjust line spacing for readability */
+    padding: 10px; /* Add padding around the board for clarity */
+    transform: scale(1.5);  /* Zoom in the entire board by 1.5x */
+    transform-origin: center;  /* Keep the zoom centered */
+    transition: transform 0.3s ease;  /* Smooth transition for zooming */
+}
+
+/* Style for white pieces using the "regular" font */
+.white-piece {
+    font-family: "chess-outline", monospace;
+    color: black;
+    letter-spacing: 0.5vw;
+}
+
+/* Style for black pieces using the "outline" font */
+.black-piece {
+    font-family: "chess-regular", monospace;
+    color: black; /* You can adjust the color as needed */
+    letter-spacing: 0.5vw;
+}
+
+/* Optional: Style for empty squares (can use a lighter color) */
+.empty-square {
+    color: black;
+    letter-spacing: 0.25vw;
+}
+
+.move-form {
+    margin-top: 50px;
+}
+
+input[type="text"] {
+    font-size: 16px;
+    padding: 5px;
+}
+
+button {
+    font-size: 16px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* Style for error message */
+.error-message {
+    color: red;
+}
