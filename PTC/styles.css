@@ -16,7 +16,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f4f4f9;
+    background-color: #2B2B2B;
 }
 
 .board-container {
@@ -24,29 +24,29 @@ body {
 }
 
 .board {
-    font-family: "Custom Chess Font", monospace;
+    font-family: monospace;
     white-space: pre-line; /* Keep formatting from Python */
     text-align: center; /* Center-align the text within the container */
     margin: 0 auto; /* Center the board horizontally */
     display: inline-block; /* Ensure the board is not treated as a block element */
     line-height: 1.5em; /* Adjust line spacing for readability */
     padding: 10px; /* Add padding around the board for clarity */
-    background-color: #f4f4f9; /* Optional: Light background for contrast */
+    background-color: #2B2B2B; /* Optional: Light background for contrast */
 }
 
 .white-piece {
     font-family: "regular", sans-serif;
-    color: black; /* You can change the color as needed */
+    color: #DCDCDC; /* You can change the color as needed */
 }
 
 /* Style for black pieces using the "outline" font */
 .black-piece {
     font-family: "outline", sans-serif;
-    color: #333; /* You can adjust the color as needed */
+    color: #DCDCDC; /* You can adjust the color as needed */
 }
 
 .empty-square {
-    color: #bbb; /* Light gray for empty squares */
+    color: #585858; /* Light gray for empty squares */
 }
 
 .move-form {
@@ -62,4 +62,14 @@ button {
     font-size: 16px;
     padding: 5px 10px;
     cursor: pointer;
+}
+
+@keyframes flash {
+    0% { color: red; }
+    50% { color: transparent; }
+    100% { color: red; }
+}
+
+.invalid-piece {
+    animation: flash 0.7s;
 }

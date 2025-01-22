@@ -51,13 +51,13 @@ def set_name():
     if players['White'] is None:
         players['White'] = name
         turn = "White"  # The first person plays as White, the second one plays as Black
-        return {"color": 'White'}
+        return render_template('index.html', players=players, turn=turn, board_str=render_board(), color='White')
 
     elif players['Black'] is None:
         players['Black'] = name
-        return {"color": 'Black'}
+        return render_template('index.html', players=players, turn=turn, board_str=render_board(), color='Black')
 
-    return {"color": 'None'}
+    return render_template('index.html', players=players, turn=turn, board_str=render_board(), color='None')
 
 # WebSocket event: Listen for a move from a client
 @socketio.on('move')
@@ -66,8 +66,13 @@ def handle_move(move):
     error_message = None
 
     try:
+        move = move.lower()
         chess_move = chess.Move.from_uci(move)
         if chess_move in board.legal_moves:
+            # Handle promotion
+            promotion_piece = handle_promotion(chess_move)
+            if promotion_piece:
+                chess_move.promotion = promotion_piece  # Set the promotion piece
             board.push(chess_move)
             turn = "Black" if turn == "White" else "White"  # Toggle turn
         else:
@@ -75,8 +80,25 @@ def handle_move(move):
     except Exception as e:
         error_message = f"Error: {str(e)}"
 
+    # End game detection
+    if board.is_checkmate():
+        error_message = "Checkmate! Game Over."
+        emit('game_over', {'message': error_message}, broadcast=True)
+    elif board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves():
+        error_message = "Draw! Game Over."
+        emit('game_over', {'message': error_message}, broadcast=True)
+
     board_str = render_board()
     emit('update_board', {'board_str': board_str, 'error_message': error_message, 'turn': turn}, broadcast=True)
 
+# Function to handle pawn promotion
+def handle_promotion(move):
+    # Only promote pawns on the 8th rank for white and 1st rank for black
+    if board.piece_at(move.from_square).symbol() == 'p' and move.to_square in [chess.A8, chess.H8]:
+        return "q"  # Promote to queen by default; implement a prompt for player selection
+    if board.piece_at(move.from_square).symbol() == 'P' and move.to_square in [chess.A1, chess.H1]:
+        return "q"  # Promote to queen by default; implement a prompt for player selection
+    return None  # No promotion
+
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5500, debug=True,allow_unsafe_werkzeug=True)
+    socketio.run(app, host='0.0.0.0', port=5500, debug=True, allow_unsafe_werkzeug=True)

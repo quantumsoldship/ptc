@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Game</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="static/css/styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
 </head>
@@ -30,13 +30,14 @@
                 <div class="error-message" style="color: red;">{{ error_message }}</div>
             {% endif %}
             <form id="move-form">
-                <label for="move">Enter your move (e.g., e2e4): </label>
+                <label for="move">Enter move: </label>
                 <input type="text" id="move" name="move" required>
                 <button type="submit">Submit</button>
             </form>
-            <p>It's {{ turn }}'s turn.</p>
+            <p>{{ turn }} to play.</p>
             <p>White: {{ players['White'] }}</p>
             <p>Black: {{ players['Black'] }}</p>
+            <p>You are playing as: {{ color }}</p>
         </div>
     {% endif %}
 </div>
@@ -75,7 +76,7 @@
             } else {
                 $('.error-message').html('');
             }
-            $('p:contains("turn")').text("It's " + data.turn + "'s turn.");
+            $('p:contains("turn")').text(data.turn + " to play.");
         });
     });
 </script>
